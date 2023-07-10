@@ -9,7 +9,7 @@ from django.urls import reverse
 class Category(models.Model):
     # unique=True 중복 불허
     name = models.CharField(max_length=50, unique=True)
-    # url 주소 - 문자, allow_unicode - 한글 허용
+    # url주소 - 문자, allow_unicode - 한글허용
     slug = models.SlugField(max_length=200, unique=True,
                 allow_unicode=True)
 
@@ -18,7 +18,7 @@ class Category(models.Model):
 
     # 카테고리 url 주소
     def get_absolute_url(self):
-        # return f'/blog/category/{self.slug}'  # 절대 경로
+        # return f'/blog/category/{self.slug}'  #절대 경로
         # reverse() - redirect 유사 : app-name으로 경로 이동
         return reverse('blog:category_page', args=[self.slug])
 
@@ -30,18 +30,18 @@ class Category(models.Model):
 
 # 포스트 모델
 class Post(models.Model):
-    author =  models.ForeignKey(User, on_delete=models.CASCADE)
-    title = models.CharField(max_length=100)    # 제목
-    content = models.TextField()                # 내용
-    pub_date = models.DateTimeField()           # 발행일
-    modify_date = models.DateTimeField(null=True, blank=True)   # 입력 폼이 비어도 됨
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    title = models.CharField(max_length=100)  #제목
+    content = models.TextField()              #내용
+    pub_date = models.DateTimeField()         #발행일
+    modify_date = models.DateTimeField(null=True, blank=True) #입력 폼이 비어도 됨
     photo = models.ImageField(upload_to='blog/images/%Y/%m/%d/',
-                    null=True, blank=True)  # null 허용, 파일을 첨부하지 않을 수 있음
+                    null=True, blank=True)  #null 허용, 파일을 첨부하지 않을수 있음
     file = models.FileField(upload_to='blog/files/%Y/%m/%d/',
                     null=True, blank=True)
     # models.SET_NULL: 카테고리가 삭제되어도 카테고리가 없는 포스트는 유지
     category = models.ForeignKey(Category, null=True, blank=True,
-                    on_delete=models.SET_NULL)  # 카테고리가 삭제되어도
+                    on_delete=models.SET_NULL)
 
     def __str__(self):
         return self.title
@@ -52,5 +52,15 @@ class Post(models.Model):
 
     # 파일의 확장자 구분
     def get_file_ext(self):
-        # seoul.csv -> split() -> [seoul, csv]
+        # seoul.csv ->split() -> [seoul, csv]
         return self.get_file_name().split('.')[-1]
+
+# 댓글 모델
+class Comment(models.Model):
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    content = models.TextField()
+    pub_date = models.DateTimeField()
+    modify_date = models.DateTimeField(null=True, blank=True)
+    # 게시글이 부모 키, 댓글이 자식 키(외래 키)
+    post = models.ForeignKey(Post, null=True, blank=True,
+                        on_delete=models.CASCADE)

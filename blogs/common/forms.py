@@ -6,6 +6,6 @@ from django.contrib.auth.models import User
 class UserForm(UserCreationForm):
     email = forms.EmailField(label='이메일')
 
-    class Meta: # 중첩 클래스
+    class Mata:  #중첩 클래스
         model = User
-        fields = ('username', 'email')  # 튜플 구조
+        fields = ('username', 'email') #튜플 구조

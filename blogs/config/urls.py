@@ -6,10 +6,12 @@ from blog import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.index), # http://127.0.0.1:8000/
+    path('', views.index), #http://127.0.0.1:8000/
     path('blog/', include('blog.urls')),
-    path('common/', include('common.urls')),
+    path('common/', include('common.urls')),  #일반 로그인
+    path('accounts/', include('allauth.urls')), #소셜 로그인
 ]
 
 urlpatterns += static(settings.MEDIA_URL,
         document_root=settings.MEDIA_ROOT)
+
